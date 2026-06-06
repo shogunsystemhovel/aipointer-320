@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AIPointer · v1.1.0 Roadmap</title>
+<style>
+  :root {
+    --bg: #0a0a0b;
+    --panel: #131316;
+    --panel-2: #1a1a1f;
+    --ink: #f5f5f4;
+    --ink-soft: rgba(245, 245, 244, 0.72);
+    --ink-faint: rgba(245, 245, 244, 0.42);
+    --ink-mute: rgba(245, 245, 244, 0.28);
+    --accent: #a7f56b;
+    --accent-soft: rgba(167, 245, 107, 0.14);
+    --accent-line: rgba(167, 245, 107, 0.42);
+    --warn: #f4c25e;
+    --danger: #f06070;
+    --border: rgba(245, 245, 244, 0.08);
+    --border-strong: rgba(245, 245, 244, 0.14);
+    --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  }
+  * { box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, system-ui, "Segoe UI", Inter, sans-serif;
+    background: radial-gradient(ellipse at top, #15151a, var(--bg) 60%);
+    color: var(--ink);
+    font-size: 14.5px;
+    line-height: 1.65;
+  }
+  .wrap {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 60px 36px 120px;
+  }
+  /* HERO */
+  .hero {
+    border: 1px solid var(--border);
+    background: var(--panel);
+    border-radius: 18px;
+    padding: 36px 38px 30px;
+    margin-bottom: 32px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: "";
+    position: absolute;
+    inset: -50% -10% auto auto;
+    width: 480px;
+    height: 480px;
+    background: radial-gradient(circle, var(--accent-soft), transparent 70%);
+    pointer-events: none;
+  }
+  .hero h1 {
+    font-size: 38px;
+    font-weight: 600;
+    margin: 0 0 8px;
+    letter-spacing: -0.025em;
+    position: relative;
+  }
+  .hero h1 .accent { color: var(--accent); }
+  .hero .lede {
+    font-size: 15.5px;
+    color: var(--ink-soft);
+    max-width: 720px;
+    margin: 0 0 22px;
+    position: relative;
+  }
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+    font-size: 12px;
+    color: var(--ink-faint);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-weight: 500;
+    position: relative;
+  }
+  .meta .dot {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    background: var(--accent);
+    border-radius: 50%;
+    margin-right: 8px;
+    box-shadow: 0 0 8px var(--accent);
+  }
+
+  /* SECTIONS */
+  section { margin: 56px 0 0; }
+  h2 {
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: -0.015em;
+    margin: 0 0 8px;
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+  }
+  h2 .num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    border: 1px solid var(--accent-line);
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 600;
+    background: var(--accent-soft);
+    flex-shrink: 0;
+  }
+  h2 .tag {
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    padding: 3px 8px;
+    border-radius: 999px;
+    border: 1px solid var(--border-strong);
+    color: var(--ink-faint);
+    font-weight: 600;
+  }
+  h2 .tag.t1 { color: var(--accent); border-color: var(--accent-line); background: var(--accent-soft); }
+  h2 .tag.t2 { color: var(--warn); border-color: rgba(244,194,94,0.4); background: rgba(244,194,94,0.08); }
+  h2 .tag.t3 { color: var(--ink-faint); }
+
+  .subtitle {
+    color: var(--ink-soft);
+    max-width: 780px;
+    margin: 0 0 24px;
+    font-size: 14px;
+  }
+
+  h3 {
+    font-size: 16.5px;
+    font-weight: 600;
+    margin: 0 0 6px;
+    color: var(--ink);
+  }
+  h3 .badge {
+    display: inline-block;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 2px 7px;
+    border-radius: 4px;
+    margin-left: 8px;
+    font-weight: 600;
+    vertical-align: middle;
+  }
+  .badge-effort-s { background: rgba(167,245,107,0.15); color: var(--accent); }
+  .badge-effort-m { background: rgba(244,194,94,0.15); color: var(--warn); }
+  .badge-effort-l { background: rgba(240,96,112,0.15); color: var(--danger); }
+  .badge-confirmed { background: var(--accent-soft); color: var(--accent); }
+  .badge-stretch { background: rgba(244,194,94,0.12); color: var(--warn); }
+  .badge-skip { background: rgba(240,96,112,0.1); color: var(--danger); }
+
+  /* CARDS */
+  .card {
+    border: 1px solid var(--border);
+    background: var(--panel);
+    border-radius: 12px;
+    padding: 20px 22px;
+    margin: 14px 0;
+  }
+  .card.accent {
+    border-color: var(--accent-line);
+    background: linear-gradient(180deg, var(--accent-soft), transparent 60%), var(--panel);
+  }
+  .card .why {
+    font-size: 13px;
+    color: var(--ink-soft);
+    margin: 6px 0 12px;
+  }
+  .card .impl {
+    font-size: 13px;
+    color: var(--ink-soft);
+    border-top: 1px dashed var(--border);
+    padding-top: 12px;
+    margin-top: 12px;
+  }
+  .card .impl strong { color: var(--ink); font-weight: 600; }
+  .card ul { margin: 6px 0 0 18px; padding: 0; }
+  .card li { margin: 3px 0; color: var(--ink-soft); }
+  .card code { font-family: var(--mono); font-size: 12.5px; padding: 1px 5px; background: var(--panel-2); border-radius: 4px; color: var(--ink); }
+
+  /* TABLE */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 14px 0;
+    font-size: 13px;
+  }
+  th, td {
+    text-align: left;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  th {
+    font-weight: 600;
+    color: var(--ink-faint);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 11px;
+  }
+  td.muted { color: var(--ink-faint); }
+  td .pill {
+    display: inline-block;
+    padding: 2px 9px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .pill-ok { background: var(--accent-soft); color: var(--accent); }
+  .pill-warn { background: rgba(244,194,94,0.12); color: var(--warn); }
+  .pill-no { background: rgba(240,96,112,0.1); color: var(--danger); }
+
+  /* BEFORE/AFTER */
+  .ba {
+    display: grid;
+    grid-template-columns: 1fr 32px 1fr;
+    gap: 0;
+    margin: 14px 0 4px;
+    align-items: stretch;
+  }
+  .ba .col {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 18px;
+    background: var(--panel-2);
+  }
+  .ba .col.before { border-color: rgba(240,96,112,0.25); }
+  .ba .col.after { border-color: var(--accent-line); background: linear-gradient(180deg, var(--accent-soft), transparent), var(--panel-2); }
+  .ba .label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .ba .before .label { color: var(--danger); }
+  .ba .after .label { color: var(--accent); }
+  .ba .content { font-size: 13px; color: var(--ink-soft); line-height: 1.55; }
+  .ba .content strong { color: var(--ink); font-weight: 600; }
+  .ba .arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent);
+    font-size: 22px;
+    font-weight: 600;
+  }
+
+  /* QUOTE */
+  .quote {
+    border-left: 3px solid var(--accent-line);
+    background: var(--accent-soft);
+    padding: 14px 18px;
+    margin: 12px 0;
+    border-radius: 0 8px 8px 0;
+    font-size: 13px;
+    color: var(--ink-soft);
+  }
+  .quote .who {
+    color: var(--accent);
+    font-weight: 600;
+    font-size: 12px;
+    margin-bottom: 4px;
+  }
+
+  /* STATS */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin: 20px 0;
+  }
+  .stat {
+    border: 1px solid var(--border);
+    background: var(--panel);
+    border-radius: 10px;
+    padding: 14px 16px;
+  }
+  .stat .num {
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--accent);
+    letter-spacing: -0.02em;
+  }
+  .stat .label {
+    font-size: 11px;
+    color: var(--ink-faint);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-top: 2px;
+  }
+
+  /* HANDOFF */
+  .handoff {
+    border: 1px dashed var(--accent-line);
+    background: var(--accent-soft);
+    border-radius: 12px;
+    padding: 22px 26px;
+    margin: 24px 0;
+    font-size: 13.5px;
+  }
+  .handoff h3 { color: var(--accent); margin: 0 0 10px; }
+  .handoff code { font-family: var(--mono); color: var(--ink); }
+
+  hr.sep {
+    border: 0;
+    border-top: 1px solid var(--border);
+    margin: 48px 0;
+  }
+
+  /* OPEN QUESTIONS */
+  .oq { display: grid; grid-template-columns: 28px 1fr; gap: 12px; padding: 10px 0; border-top: 1px dashed var(--border); }
+  .oq:first-child { border-top: 0; }
+  .oq .q { color: var(--accent); font-weight: 600; }
+
+  /* RESPONSIVE */
+  @media (max-width: 760px) {
+    .wrap { padding: 32px 18px 80px; }
+    .hero { padding: 24px; }
+    .hero h1 { font-size: 28px; }
+    .stats { grid-template-columns: repeat(2, 1fr); }
+    .ba { grid-template-columns: 1fr; }
+    .ba .arrow { display: none; }
+  }
+
+  /* PRINT */
+  @media print {
+    body { background: #fff; color: #000; }
+    .hero, .card, .stat, .handoff, .col { background: #fff !important; border-color: #ccc !important; }
+    h1, h2, h3 { color: #000; }
+    .accent, .stat .num, .hero h1 .accent { color: #4a7d28; }
+    .quote { background: #f5f5f5; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- HERO -->
+  <header class="hero">
+    <h1><span class="accent">AI</span>Pointer · v1.1.0 Roadmap</h1>
+    <p class="lede">
+      Living strategy + planning document for the next minor version. Captures everything that's shipped in v1.0.0, what the community wants next, where the DeepMind benchmark actually pushes us, and where it doesn't. Use this as orientation when opening a fresh chat session.
+    </p>
+    <div class="meta">
+      <span><span class="dot"></span>v1.0.0 live · signed · notarized</span>
+      <span>Created 2026-05-14</span>
+      <span>Author Mario Simic · talentsache</span>
+      <span>Repo github.com/talentsache/aipointer</span>
+    </div>
+  </header>
+
+  <!-- WHERE WE ARE -->
+  <section>
+    <h2><span class="num">1</span> Where we are <span class="tag">Status quo</span></h2>
+    <p class="subtitle">v1.0.0 is live for ~24 hours. Three signed builds on aipointer.app (DMG arm64 + x64, NSIS x64, AppImage x64). Sharp/libvips replaced with Electron's <code>nativeImage</code> — Windows + Linux builds now pass on first try. Branding, website, demo video, ToS, MIT license all in place.</p>
+
+    <div class="stats">
+      <div class="stat"><div class="num">70+</div><div class="label">GitHub stars · day 1</div></div>
+      <div class="stat"><div class="num">3</div><div class="label">Platforms shipping</div></div>
+      <div class="stat"><div class="num">4</div><div class="label">LLM providers wired</div></div>
+      <div class="stat"><div class="num">10</div><div class="label">Slash-command templates</div></div>
+    </div>
+  </section>
+
+  <!-- WHAT SHIPPED POST-DEMO-VIDEO -->
+  <section>
+    <h2><span class="num">2</span> What shipped after the demo video <span class="tag">Context</span></h2>
+    <p class="subtitle">The YouTube demo (<code>youtu.be/NRIlG32hvLg</code>) was recorded before the late v1.0.0 polish session. Anyone analysing the video will think these are missing — they're already in the code:</p>
+
+    <div class="card">
+      <ul>
+        <li><strong>Cursor comet trail</strong> · Catmull-Rom-Spline, three overlaid SVG paths (aura 26 px / mid 11 px / core 4 px), gradient stroke, blur, 18-point ring buffer with idle decay. <code>renderer/components/CursorHalo.tsx</code></li>
+        <li><strong>Region-screenshot via drag</strong> · Hold trigger key again → crosshair → drag rectangle → captures exactly that region instead of the default crop. ESC cancels mid-drag.</li>
+        <li><strong>Voice-first conversation mode</strong> · Hands-free loop: auto-mic-on-trigger → VAD-stop → auto-submit → TTS read-back → auto-rearm. Phase pill above input shows <em>Listening / Thinking / Speaking / Done · say a follow-up</em>.</li>
+        <li><strong>Provider key tester</strong> · <code>Test</code> button per provider hits the live endpoint via Electron <code>net</code>. OpenRouter returns remaining credit balance like "$3.42 left" inline.</li>
+        <li><strong>Live clipboard polling</strong> · 400 ms tick while box is open. Cmd+C in another app surfaces the chip within 0.5 s. X dismisses the current clipboard until something new is copied.</li>
+        <li><strong>Settings panel rewrites</strong> · Save no longer auto-closes (Save / Close toggle by dirty state). FAQ expanded to 15 items. Tray DevTools entry removed for end users.</li>
+        <li><strong>Flicker eliminated</strong> · Three root causes fixed (useLinkMetas infinite loop, motion.div layout=true size-spring, setOverlayInteractive redundant focus/blur). Drag-then-input dead-zone fixed (forwardedRef moved to inner motion.div).</li>
+        <li><strong>Sharp removed from runtime</strong> · Icons pre-baked in <code>assets/</code> via <code>scripts/bake-icons.cjs</code> · screenshot cropping via <code>nativeImage.crop().toJPEG()</code>. No more native-binding cross-platform pain.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- COMMUNITY VOICE -->
+  <section>
+    <h2><span class="num">3</span> Community voice <span class="tag">Reddit + Gemini</span></h2>
+    <p class="subtitle">Synthesised feedback from r/LocalLLaMA (Qwen2.5-VL discussion thread) and a Gemini audit comparing AIPointer to the DeepMind AI Pointer demo.</p>
+
+    <h3 style="margin-top: 22px;">From r/LocalLLaMA</h3>
+    <div class="quote">
+      <div class="who">Otherwise_Economy576</div>
+      "For sub-2s TTFT with vision + tools, the realistic shortlist on consumer hardware is shorter than people make out: <strong>Qwen2.5-VL 7B</strong> (best tool-calling for size), InternVL 2.5 (faster but weaker tools), MiniCPM-V 2.6 (small + capable but no native tool calls). Vision models eat tokens fast — a single 1080p screenshot is 1500-2500 tokens. Crop tight (256-512 px) and TTFT halves. llama.cpp + Qwen2.5-VL with --cont-batching and f16 vision tower gives best TTFT measured on a 4090 (~600-900 ms first token for a 384 px image)."
+    </div>
+    <div class="quote">
+      <div class="who">ilintar (Top 1% Commenter)</div>
+      "If you want fast + good + visual, <strong>Qwen3.6 35B-A3B</strong> is probably your best bet. For the stack just use llama.cpp, works out of the box on consumer hardware. Disregard accounts saying 'Qwen2.5 VL', that stuff is prehistoric."
+    </div>
+    <div class="quote">
+      <div class="who">jacky2060</div>
+      "Try Qwen 3.5/3.6 with llama.cpp. Set <code>--image-min-tokens</code> to something reasonable like 1024. Stabilises TTFT a lot, especially for tiny cursor-region crops where the model otherwise overthinks small inputs."
+    </div>
+    <div class="quote">
+      <div class="who">InteractionSmall6778</div>
+      "M-series Mac: Qwen2.5-VL 7B through MLX is your best starting point. Hits under 2s TTFT on M2/M3 Pro for screenshot queries. CUDA (3090/4090): same model through Ollama or llama.cpp, 7B at Q4 fits in 8 GB VRAM. Skip vLLM — setup overhead doesn't pay off for single-user local inference."
+    </div>
+
+    <h3 style="margin-top: 22px;">From Gemini's audit (DeepMind comparison)</h3>
+    <p style="color: var(--ink-soft); font-size: 13.5px;">
+      <strong>Valid critiques:</strong> Pill positioning is static rather than dynamic-with-inertia, the comet trail wasn't visible in the demo (note: it shipped after the video — see §2), the pill doesn't visually "grow from the cursor" on entry, glassmorphism aesthetic was reduced during the theme overhaul.
+    </p>
+    <p style="color: var(--ink-soft); font-size: 13.5px;">
+      <strong>Wrong / overstated:</strong> "OS-level integration" is a structural Indie-vs-Corporate gap, not a feature gap. "Code-execution action engine" belongs to Skales, not AIPointer (the two-product funnel is intentional). "Gemini 1.5 Flash for low latency" is outdated — we already run Gemini 3 Flash plus multi-provider routing.
+    </p>
+  </section>
+
+  <hr class="sep">
+
+  <!-- v1.1.0 TIER 1 -->
+  <section>
+    <h2><span class="num">4</span> v1.1.0 — Tier 1 <span class="tag t1">Shipped 2026-05-16</span></h2>
+    <p class="subtitle">Shipped in v1.1.0: foundation fixes (TTS-stop-on-mic, lazy safeStorage, default crop, glassmorphism), onboarding wizard, Child Mode, app launcher, voice commands, autostart, mouse wiggle, left-side hotkey listening, dynamic pill, XSS test suite, documentation. Local-model support deferred to v1.2.0. Effort key kept below for the items that did NOT ship in v1.1: S = under 4h · M = 1-2 days · L = 3-5 days.</p>
+
+    <!-- 4.1 LOCAL MODEL -->
+    <div class="card accent">
+      <h3>4.1 Local-model support <span class="badge badge-effort-l">L · 3-5 days</span></h3>
+      <p class="why"><strong>Why.</strong> Differentiates us against DeepMind (cloud-only). r/LocalLLaMA is already engaged. Privacy audience is real and growing. Adds a fifth provider option without touching the existing four.</p>
+
+      <div class="ba">
+        <div class="col before">
+          <div class="label">Before · v1.0</div>
+          <div class="content">Four cloud providers (OpenRouter primary, Anthropic, OpenAI, Gemini). Every screenshot leaves the machine. No way to run offline. Users on r/LocalLLaMA explicitly asking for local option.</div>
+        </div>
+        <div class="arrow">→</div>
+        <div class="col after">
+          <div class="label">After · v1.1</div>
+          <div class="content">Fifth provider: <strong>Local (Ollama / llama.cpp / MLX)</strong>. Defaults to Qwen2.5-VL 7B on detection, falls back to user-configured endpoint. Screenshot never leaves the device. Sub-2s TTFT on M-series and recent CUDA cards.</div>
+        </div>
+      </div>
+
+      <div class="impl">
+        <strong>Implementation.</strong>
+        <ul>
+          <li>New <code>electron/llm/providers/local.ts</code> implementing the shared <code>ProviderClient</code> interface. OpenAI-compatible HTTP since llama.cpp / Ollama / MLX-server all expose that.</li>
+          <li>Settings → providers card adds a fifth row. Endpoint URL field (default <code>http://localhost:11434/v1</code> for Ollama, <code>http://localhost:8080/v1</code> for llama.cpp). No API key required.</li>
+          <li>Model picker per-platform: M-series default <code>qwen2.5-vl:7b-q4</code>, NVIDIA default same via Ollama, Linux/Windows CPU fallback warns user about TTFT.</li>
+          <li>Per-request <code>image-min-tokens</code> setting (default 1024 per the Reddit tip) to stabilise TTFT for small cursor crops.</li>
+          <li>Test button works the same way: hits <code>/v1/models</code> on the local endpoint, returns "✓ qwen2.5-vl:7b · 4.2 GB on disk" if found.</li>
+          <li>Documentation: <code>docs/LOCAL_MODELS.md</code> covering install paths for the three runtimes plus reasonable model picks per hardware tier.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 4.2 GLASSMORPHISM -->
+    <div class="card">
+      <h3>4.2 Glassmorphism restoration <span class="badge badge-effort-s">S · 2-3h</span></h3>
+      <p class="why"><strong>Why.</strong> aipointer.app's hero copy and the README both call out "glassmorphism box" — the current solid <code>bg-neutral-900</code> / <code>dark:bg-white</code> doesn't match the marketing. Theme correctness during the late v1.0 polish accidentally over-corrected.</p>
+
+      <div class="ba">
+        <div class="col before">
+          <div class="label">Now</div>
+          <div class="content">PromptInput uses <code>bg-neutral-900</code> (dark) / <code>bg-white</code> (light) — solid colour, no transparency, no backdrop blur. Looks correct in tone but flat in feel. No depth, no sense that the box sits <em>over</em> what's behind it.</div>
+        </div>
+        <div class="arrow">→</div>
+        <div class="col after">
+          <div class="label">v1.1</div>
+          <div class="content">Translucent fill (<code>bg-neutral-900/85</code> / <code>bg-white/85</code>) plus <code>backdrop-blur-xl</code>. Tuned so text remains AAA-readable on busy backgrounds — light theme uses a heavier opacity than dark to compensate for backdrop colour mixing. Drag handle and chip rows also get the treatment.</div>
+        </div>
+      </div>
+
+      <div class="impl">
+        <strong>Implementation.</strong> Single file change in <code>renderer/components/PromptInput.tsx</code> motion.div className. No new dependencies. The backdrop-filter property is already in our PostCSS-tailwind pipeline (used by ConversationPhasePill and several tooltips). Test on 5 backgrounds: white doc, dark IDE, busy photo, gradient, video. Adjust per-theme opacity until contrast passes.
+      </div>
+    </div>
+
+    <!-- 4.3 TRAFFIC LIGHTS -->
+    <div class="card">
+      <h3>4.3 macOS traffic-light real fix <span class="badge badge-effort-s">S · 1-2h</span></h3>
+      <p class="why"><strong>Why.</strong> On macOS the three close/minimise/maximise dots are still visible (greyed out) in the top-left of the box despite <code>frame: false</code> + <code>setWindowButtonVisibility(false)</code>. Looks unprofessional and contradicts our "no chrome" aesthetic. Windows and Linux are clean already.</p>
+
+      <div class="ba">
+        <div class="col before">
+          <div class="label">Now</div>
+          <div class="content">Three faint disabled dots leak through on macOS panel windows in some macOS versions. <code>setWindowButtonVisibility(false)</code> works for normal frameless windows but is unreliable for the transparent <code>type: 'panel'</code> variant we use.</div>
+        </div>
+        <div class="arrow">→</div>
+        <div class="col after">
+          <div class="label">v1.1</div>
+          <div class="content">Belt-and-braces fix: <code>trafficLightPosition: { x: -100, y: -100 }</code> in BrowserWindow constructor positions the buttons off-canvas, <strong>plus</strong> <code>setWindowButtonVisibility(false)</code> for engines that honour it, <strong>plus</strong> <code>titleBarStyle: 'hiddenInset'</code> as third safety net. Cross-checked against Electron issue #36431 and ElectronJS Discord best-practice thread.</div>
+        </div>
+      </div>
+
+      <div class="impl">
+        <strong>Implementation.</strong> Three-line change in <code>electron/windows/overlay.ts</code> BrowserWindow options. Verify on macOS Sonoma + Sequoia (different rendering paths). No Windows / Linux impact.
+      </div>
+    </div>
+
+    <!-- 4.4 DEFAULT CROP -->
+    <div class="card">
+      <h3>4.4 Default cursor-region crop reduced 1024×768 → 512×384 <span class="badge badge-effort-s">S · 2h</span></h3>
+      <p class="why"><strong>Why.</strong> Direct r/LocalLLaMA tip: vision models tokenise screenshots; halving image dimensions quarters the token count and halves TTFT. Our drag-region feature already handles "I need bigger" — the default should optimise for speed.</p>
+
+      <div class="ba">
+        <div class="col before">
+          <div class="label">Now</div>
+          <div class="content">Every trigger captures 1024×768 px around cursor. ~2000 vision tokens per request. TTFT 1.4-2.2 s on Gemini 3 Flash, slower on others. Most queries don't need that much context — the user is pointing at a specific element.</div>
+        </div>
+        <div class="arrow">→</div>
+        <div class="col after">
+          <div class="label">v1.1</div>
+          <div class="content">Default 512×384 (~600 tokens). TTFT halved across all providers. Settings → Behaviour adds "Default crop size" picker: <em>Tight (512×384) · Standard (768×576) · Wide (1024×768)</em>. Wide is current behaviour preserved for users who relied on it. Drag-region still trumps default per-query.</div>
+        </div>
+      </div>
+
+      <div class="impl">
+        <strong>Implementation.</strong> Constants in <code>electron/capture/screenshot.ts</code> become settings-driven. New <code>defaultCropSize</code> in <code>Settings</code> type and store schema. Migration: existing users keep their current 1024×768 — only fresh installs default to 512×384.
+      </div>
+    </div>
+
+    <!-- 4.5 DYNAMIC PILL -->
+    <div class="card">
+      <h3>4.5 Dynamic pill behaviour — subtle cursor-following inertia <span class="badge badge-effort-m">M · 1-2 days</span></h3>
+      <p class="why"><strong>Why.</strong> Gemini's audit nailed it: the box currently feels like a window, not a partner. DeepMind's pill has weight and slight drift toward where attention is. We already use Framer Motion springs for the entry animation — extend that to a continuous gentle pull toward cursor while the box is open.</p>
+
+      <div class="ba">
+        <div class="col before">
+          <div class="label">Now</div>
+          <div class="content">Box mounts at cursor anchor via <code>computeAnchor()</code>, sits there until user drags it. Cursor movement after open is ignored. If user moves to a different part of the screen the box stays put — feels disconnected from intent.</div>
+        </div>
+        <div class="arrow">→</div>
+        <div class="col after">
+          <div class="label">v1.1</div>
+          <div class="content">Box has a <em>resting offset</em> from cursor (current behaviour) but with a 0.3-0.4 weight toward live cursor position. Slow springy drift, not a 1:1 follow. Max drift distance capped so the box never chases the cursor across the whole screen. User drag still wins — manual position is sticky for 5 s before drift resumes.</div>
+        </div>
+      </div>
+
+      <div class="impl">
+        <strong>Implementation.</strong> New motion value <code>useMotionValue</code> for box position, animated with <code>useSpring</code> with low stiffness + high mass. <code>useTransform</code> derives the actual rendered position from cursor + manual-drag-offset + drift. Tweak constants until it feels like Apple Notes' floating popovers, not a chasing companion.
+      </div>
+    </div>
+
+    <!-- 4.6 MOUSE-WIGGLE -->
+    <div class="card">
+      <h3>4.6 Mouse-wiggle activation (alternative to hotkey) <span class="badge badge-effort-m">M · 1-2 days</span></h3>
+      <p class="why"><strong>Why.</strong> Observed in the DeepMind demo: shaking the cursor activates the AI pointer — a discoverable, hands-on gesture that complements the hotkey. Lowers the discovery barrier for new users who don't know about Right-Cmd. Optional, off by default.</p>
+
+      <div class="ba">
+        <div class="col before">
+          <div class="label">Now</div>
+          <div class="content">Only activation paths: hold Right-Cmd 200 ms · click the bottom pill · tray menu. Hotkey works but requires user to know it. Bottom pill is small and easy to miss.</div>
+        </div>
+        <div class="arrow">→</div>
+        <div class="col after">
+          <div class="label">v1.1</div>
+          <div class="content"><strong>Mouse-shake</strong>: 4+ direction reversals within 600 ms over a 60 px arc triggers the box. Same effect as hold-key. Detected in the existing uiohook mouse handler. Settings toggle "Activate by mouse wiggle" — off by default to avoid surprising existing users. macOS already has system-wide cursor-shake-to-find — we'd respect that by using a tighter window (must be near-stationary outside the shake, then shake).</div>
+        </div>
+      </div>
+
+      <div class="impl">
+        <strong>Implementation.</strong> Extension to <code>electron/input/trigger.ts</code>. New ring buffer of recent mouse vectors. Detector logic: vector reversal counter, time window, displacement threshold. When threshold hit → same code-path as <code>fireStart()</code>. Setting flag in store. No new IPC channels needed.
+      </div>
+    </div>
+  </section>
+
+  <hr class="sep">
+
+  <!-- v1.1.0 TIER 2 -->
+  <section>
+    <h2><span class="num">5</span> v1.1.0 — Tier 2 <span class="tag t2">Stretch</span></h2>
+    <p class="subtitle">Nice-to-have additions that ship with v1.1 if time allows, defer to v1.1.1 otherwise. None of these are blocking the release.</p>
+
+    <div class="card">
+      <h3>5.1 active-win integration for window-context awareness <span class="badge badge-effort-s">S · 1 day</span></h3>
+      <p class="why"><strong>Why.</strong> Knowing the foreground app's title and bundle ID is a free quality boost. The model goes from "I see a window with text" to "I see a Slack thread in the #marketing channel". Low effort, immediate quality gain on dense multi-window setups. Native module, but pure JS API — no platform-specific compile.</p>
+      <div class="impl">
+        <strong>Implementation.</strong> <code>npm install active-win</code>. Call once on trigger (it's fast, ~50 ms). Pass title + owner.bundleId into <code>buildMessages</code> as an extra system-context line. No UI change — just better answers.
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>5.2 Voice waveform visualiser <span class="badge badge-effort-s">S · 1 day</span></h3>
+      <p class="why"><strong>Why.</strong> Current voice feedback is a single pulsing dot (driven by <code>voice.level</code>). DeepMind's demo has a liquid blob / Siri-style waveform that's instantly more reactive-feeling. Same input signal, prettier output.</p>
+      <div class="impl">
+        <strong>Implementation.</strong> Web Audio API <code>AnalyserNode</code> already wired in <code>useVoiceInput</code>. Add a <code>&lt;canvas&gt;</code> in the ConversationPhasePill that draws a 32-bar frequency spectrum updated each RAF tick. Lime fill colour, fade-out edges. Replace the single dot when audio mode is on; keep dot for non-audio-mode listening.
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>5.3 image-min-tokens setting + smart routing <span class="badge badge-effort-s">S · 3-4h</span></h3>
+      <p class="why"><strong>Why.</strong> r/LocalLLaMA tip from jacky2060: setting a minimum vision-token floor stabilises TTFT for tiny crops. Pairs naturally with §4.4 (default crop reduction). Easy win after the default-crop work.</p>
+      <div class="impl">
+        <strong>Implementation.</strong> Per-provider request body field. Hidden in advanced settings (developer-mode toggle). Most users never see it.
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>5.4 Entry-animation: box grows from cursor position <span class="badge badge-effort-s">S · 2-3h</span></h3>
+      <p class="why"><strong>Why.</strong> Gemini's audit: "The pill should grow out of the cursor on entry, not pop in pre-sized at offset." Tiny tweak, big felt-quality bump.</p>
+      <div class="impl">
+        <strong>Implementation.</strong> In PromptInput's outer motion.div, change <code>initial={{ scale: 0.96, x, y }}</code> to <code>initial={{ scale: 0, x: cursorX, y: cursorY }}</code> and add <code>style={{ transformOrigin: 'top left' }}</code>. The existing spring will animate the scale + position together — already smooth, just needs the right starting point.
+      </div>
+    </div>
+  </section>
+
+  <hr class="sep">
+
+  <!-- v1.2+ -->
+  <section>
+    <h2><span class="num">6</span> v1.2+ ideas <span class="tag t3">Future</span></h2>
+    <p class="subtitle">Worth tracking but not blocking v1.1. Re-evaluate based on v1.1 user feedback.</p>
+
+    <table>
+      <thead>
+        <tr><th style="width: 32%;">Idea</th><th style="width: 18%;">Effort</th><th>Notes</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Bounding-box highlight</strong> of recognised object under cursor</td>
+          <td>M (2-3 days)</td>
+          <td>Requires lightweight on-device object detection or LLM-returned coordinate metadata. Visual feedback "the AI sees X here" before user types. Risk: detection is unreliable and a wrong box damages trust more than no box.</td>
+        </tr>
+        <tr>
+          <td><strong>Proactive slash suggestions</strong> on hover</td>
+          <td>M (3-4 days)</td>
+          <td>Pre-analyse cursor region in background after 800 ms hover, surface 2-3 likely commands ("This looks like code → <code>/explain</code>, <code>/improve</code>"). Cost = one extra vision call per hover, mitigate with debouncing and cheap router model.</td>
+        </tr>
+        <tr>
+          <td><strong>History search</strong> · ⌘K-style across past sessions</td>
+          <td>M (2 days)</td>
+          <td>Already saving sessions as JSON + HTML; just need a UI to fuzzy-search them. Low risk, useful, but not a v1.1 differentiator.</td>
+        </tr>
+        <tr>
+          <td><strong>Multi-monitor smart drag</strong></td>
+          <td>S (1 day)</td>
+          <td>Currently box stays within originating display. Allow drag-across-display.</td>
+        </tr>
+        <tr>
+          <td><strong>Custom system-prompt templates</strong> per user</td>
+          <td>S (1 day)</td>
+          <td>Power-user request. Add a "Personality" field in Settings that gets injected into every request. Saves typing the same prefix.</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- OUT OF SCOPE -->
+  <section>
+    <h2><span class="num">7</span> Out of scope <span class="tag" style="color: var(--danger); border-color: rgba(240,96,112,0.4); background: rgba(240,96,112,0.08);">Skip</span></h2>
+    <p class="subtitle">Tempting but explicitly NOT on AIPointer's roadmap. Three structural reasons, one per item.</p>
+
+    <div class="card">
+      <h3>Code-execution action engine <span class="badge badge-skip">Skales territory</span></h3>
+      <p class="why">Generating + running Python/JS in user's OS is what Skales does. If AIPointer absorbs it, the two-product funnel collapses and we lose Skales as a credible referral target. AIPointer stays single-shot Q&A with bounded tools. Skales handles persistent multi-step automation.</p>
+    </div>
+
+    <div class="card">
+      <h3>Deep OS-level integration (Accessibility tree, AppleScript bridge, Windows UI Automation) <span class="badge badge-skip">Indie cost</span></h3>
+      <p class="why">DeepMind can ship this because Google owns macOS-Chromium and Android. Solo-indie can't compete on Apple-privileged APIs — the maintenance burden alone (per-OS-version regressions, permission UX, signing exemptions) would eat all v1.1 capacity. The benefit for single-shot Q&A is marginal anyway: a 512×384 screenshot has enough context for 95% of queries.</p>
+    </div>
+
+    <div class="card">
+      <h3>Tight Apple/Microsoft platform-store integration <span class="badge badge-skip">No</span></h3>
+      <p class="why">Mac App Store sandboxing kills the global keyboard hook and screen capture flow. Microsoft Store has lighter restrictions but we'd lose auto-update control. Direct DMG/EXE/AppImage from aipointer.app stays the canonical install path. Stores might come later, but not for v1.1.</p>
+    </div>
+  </section>
+
+  <hr class="sep">
+
+  <!-- BEFORE/AFTER SHOWCASE -->
+  <section>
+    <h2><span class="num">8</span> Before / After at a glance <span class="tag">Visual summary</span></h2>
+    <p class="subtitle">The user-facing changes condensed into one table for cross-referencing.</p>
+
+    <table>
+      <thead>
+        <tr><th style="width: 22%;">Area</th><th style="width: 39%;">v1.0.0 (today)</th><th style="width: 39%;">v1.1.0 (target)</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Providers</strong></td>
+          <td class="muted">4 cloud (OpenRouter, Anthropic, OpenAI, Gemini). Every screenshot leaves the device.</td>
+          <td>5 with Local (Ollama / llama.cpp / MLX). Default Qwen2.5-VL 7B. Privacy users covered. <span class="pill pill-ok">primary</span></td>
+        </tr>
+        <tr>
+          <td><strong>Box aesthetic</strong></td>
+          <td class="muted">Solid <code>bg-neutral-900</code> / <code>bg-white</code>. Feels flat.</td>
+          <td>Translucent + backdrop-blur. Glassmorphism restored to match site copy.</td>
+        </tr>
+        <tr>
+          <td><strong>macOS chrome</strong></td>
+          <td class="muted">Greyed-out traffic-light dots leak through.</td>
+          <td>Belt-and-braces hidden: off-canvas position + visibility(false) + hiddenInset.</td>
+        </tr>
+        <tr>
+          <td><strong>Default crop</strong></td>
+          <td class="muted">1024×768 · ~2000 tokens · TTFT 1.4-2.2s</td>
+          <td>512×384 · ~600 tokens · TTFT 0.7-1.1s. Wide preserved as setting.</td>
+        </tr>
+        <tr>
+          <td><strong>Pill motion</strong></td>
+          <td class="muted">Mounts, sits still until user drags.</td>
+          <td>Gentle cursor-following inertia. Manual drag still wins for 5 s.</td>
+        </tr>
+        <tr>
+          <td><strong>Activation</strong></td>
+          <td class="muted">Hold Right-Cmd · bottom pill · tray.</td>
+          <td>Add: mouse-wiggle (4 reversals / 600ms / 60px arc).</td>
+        </tr>
+        <tr>
+          <td><strong>Voice feedback</strong></td>
+          <td class="muted">Pulsing dot driven by mic level.</td>
+          <td>32-bar frequency waveform in conversation mode. Dot retained for normal mic.</td>
+        </tr>
+        <tr>
+          <td><strong>Window context</strong></td>
+          <td class="muted">Screenshot + clipboard. No app awareness.</td>
+          <td>+ active-win foreground app title in system prompt.</td>
+        </tr>
+        <tr>
+          <td><strong>Entry animation</strong></td>
+          <td class="muted">Box appears at offset, scales from 96%.</td>
+          <td>Box grows from cursor position (transform-origin at cursor).</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- STRATEGIC -->
+  <section>
+    <h2><span class="num">9</span> Strategic open questions <span class="tag">Parking lot</span></h2>
+    <p class="subtitle">Not technical questions. Don't decide these in a heat-of-the-moment chat — sleep on them, gather user feedback, then commit.</p>
+
+    <div style="border: 1px solid var(--border); background: var(--panel); border-radius: 12px; padding: 16px 22px; margin: 14px 0;">
+      <div class="oq">
+        <div class="q">Q1</div>
+        <div>
+          <strong>Pro Edition split?</strong> · Keep v1.0.0 MIT open-source on GitHub, but ship v1.1.0+ as <em>AIPointer Pro</em> on aipointer.app under a paid one-time-purchase license. Pro gets local-model-support, advanced settings, future computer-use add-on. Risk: community fork the open v1.0 and reimplement everything. Benefit: revenue stream funds development.<br>
+          <em>Recommendation: wait until v1.1 features are concrete. Decide before public v1.1 announcement.</em>
+        </div>
+      </div>
+      <div class="oq">
+        <div class="q">Q2</div>
+        <div>
+          <strong>Public roadmap on GitHub?</strong> · Pin a <code>ROADMAP.md</code> in the repo so contributors and skeptics see the plan. Forces commitment but also reduces "is this project alive?" anxiety. Mostly upside.
+        </div>
+      </div>
+      <div class="oq">
+        <div class="q">Q3</div>
+        <div>
+          <strong>Reddit / X engagement cadence?</strong> · The r/LocalLLaMA thread is gold. Establish a weekly check-in pattern? Risks burnout but builds compounding visibility.
+        </div>
+      </div>
+      <div class="oq">
+        <div class="q">Q4</div>
+        <div>
+          <strong>Telemetry policy for v1.1?</strong> · v1.0 ships zero telemetry. Some opt-in error reporting could massively help debugging Local-Model edge cases (which model on which hardware crashes how). Tightrope walk on brand promise. Either keep zero forever, or add explicit opt-in with full transparency about what's collected.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="sep">
+
+  <!-- HANDOFF FOR NEW CHAT -->
+  <section>
+    <h2><span class="num">10</span> For a new chat session <span class="tag">Handoff</span></h2>
+    <div class="handoff">
+      <h3>Context to paste into a fresh Claude session</h3>
+      <p>If you start a new chat and need it to understand AIPointer's state and direction without re-litigating everything, paste this:</p>
+      <p style="background: var(--bg); padding: 14px 16px; border-radius: 8px; font-family: var(--mono); font-size: 12.5px; color: var(--ink-soft); border: 1px solid var(--border); margin: 12px 0;">
+        I'm Mario Simic, sole author of AIPointer (github.com/talentsache/aipointer, aipointer.app). v1.0.0 is shipped, signed, notarized, live on all three platforms. 70+ GitHub stars on day one. Sharp removed from runtime — icons pre-baked in <code>assets/</code>, screenshot cropping via Electron <code>nativeImage</code>. Skim <code>ROADMAP.html</code> in the repo root for the v1.1 plan, Tier-1 and Tier-2 priorities, and what's explicitly out of scope. Stack: Electron 30 + React 18 + TypeScript 5 + Tailwind 3 + Framer Motion + Vite 5 + uiohook-napi. Sibling product: Skales (skales.app) handles longer agentic work — AIPointer stays single-shot Q&A.
+      </p>
+      <p><strong>Then say what you want.</strong> The new session opens with the right model of the project. Save your time.</p>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer style="margin-top: 80px; padding-top: 32px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 16px; color: var(--ink-faint); font-size: 11.5px; letter-spacing: 0.04em;">
+    <span>AIPointer · v1.1.0 Roadmap · Living document</span>
+    <span>Author Mario Simic · BSL-1.1</span>
+    <span>aipointer.app · github.com/gonemedia/aipointer</span>
+  </footer>
+
+</div>
+</body>
+</html>
